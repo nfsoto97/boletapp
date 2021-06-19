@@ -65,21 +65,23 @@ class HomeScreen extends Component{
     
     const {detailProducto} = this.state;
     let nuevo=new BoletaRestDTO();
-    AsyncStorage.multiGet(['id_empresa','id_usuario','token']).then((data)=>{
-      nuevo.IdEmpresa=data[0][1];
-      nuevo.IdEmpresaPadre=data[0][1];
-      nuevo.IdUsuario=data[1][1];
-      nuevo.Token=data[2][1];
-      nuevo.Items=this.state.detailProducto;
-      BoletaService.generateBoleta(nuevo).then(response=>{
-        this.props.navigation.navigate('PdfScreen',{
-          urlPDF: response.PathBoletaPdf,
+    if(detailProducto.length>0){
+      AsyncStorage.multiGet(['id_empresa','id_usuario','token']).then((data)=>{
+        nuevo.IdEmpresa=data[0][1];
+        nuevo.IdEmpresaPadre=data[0][1];
+        nuevo.IdUsuario=data[1][1];
+        nuevo.Token=data[2][1];
+        nuevo.Items=this.state.detailProducto;
+        BoletaService.generateBoleta(nuevo).then(response=>{
+          this.props.navigation.navigate('PdfScreen',{
+            urlPDF: response.PathBoletaPdf,
+          });
+        }).catch(error=>{
+  
+  
         });
-      }).catch(error=>{
-
-
       });
-    });
+    }
   }
 
 
